@@ -6,12 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
-  <h1 class="text-primary text-center">
-    Hotel
-  </h1>
+  <h1 class="text-primary text-center">Hotel</h1>
 
   <?php
   $hotels = [
@@ -67,6 +66,15 @@
 
   // Iterazione attraverso gli hotel per generare le righe della tabella
   foreach ($hotels as $hotel) {
+    // Verifica se la checkbox è selezionata
+    if (isset($_GET['boolean']) && $_GET['boolean'] == 'on' && !$hotel['parking']) {
+      continue; // Salta gli hotel senza parcheggio se il filtro è attivo
+    }
+
+    if (isset($_GET['number']) && $_GET['number'] > $hotel['vote']) {
+      continue;
+    }
+
     echo '<tr>
       <td>' . htmlspecialchars($hotel['name']) . '</td>
       <td>' . htmlspecialchars($hotel['description']) . '</td>
@@ -79,6 +87,20 @@
   // Fine della tabella
   echo '</tbody>
   </table>';
+
+  // Form
+  echo '
+  <form>
+    <label> Vuoi il parcheggio?  
+      <input type="checkbox" id="boolean" name="boolean" ' . (isset($_GET['boolean']) ? 'checked' : '') . ' />
+    </label>
+
+    <label for= "number"> Inserisci il voto minimo
+      <input type = "number" id = "number" name= "number" min = 1 max= 5 />
+    </label>
+
+    <button type="submit"> Cerca </button>
+  </form>';
   ?>
 
 </body>
